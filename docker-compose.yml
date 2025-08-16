@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - VITE_BACKEND_URL=http://dbserver:1000
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - dbserver
+    env_file:
+      - ./backend/.env
+
+  dbserver:
+    build: ./server-postgres
+    ports:
+      - "1000:1000"
+    volumes:
+      - ./server-postgres:/app
+      - ./server-postgres/uploads:/app/uploads
+      - /app/node_modules  
+
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_NAME: vta
+      PORT: 1000
+    command: ["wait-for-it.sh", "db:5432", "--", "npm", "start"]  # ✅ 等待数据库准备好再启动
+
+  db:
+    build: ./postgres-init
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: vta
+
+volumes:
+  pgdata:

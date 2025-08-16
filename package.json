@@ -1,0 +1,20 @@
+{
+  "name": "capstone-project-25t2-9900-w18c-bread",
+  "version": "1.0.0",
+  "description": "9900 app with user account management",
+  "scripts": {
+    "docker": "docker compose up",
+    "rebuild": "node rebuild-docker.js",
+    "rebuild:full": "node rebuild-docker.js --full",
+    "reset-db": "node reset-db.js",
+    "restart-frontend": "docker compose restart frontend",
+    "restart-dbserver": "docker compose restart dbserver",
+    "migrate-db": "node migrate-db.js"
+  },
+  "dependencies": {},
+  "keywords": ["education", "learning", "management", "docker"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unsw-cse-comp99-3900/capstone-project-25t2-9900-w18c-bread.git"
+  }
+}
